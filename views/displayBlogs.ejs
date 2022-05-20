@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var blogs = [];
+            var sortOrder;
+
+            $("#getBlogs").click(function () {
+                sortOrder = $("#sorting").val();
+                if (sortOrder) {
+                    sortOrder = "?sort" + sortOrder;
+                    console.log(sortOrder);
+                }
+                $.get("http://localhost:4000/blogs/all" + sortOrder, function (blogs) {
+                    blogs.forEach((blog) => {
+                        console.log(blog);
+                        $("#blogList").append("<h2>"+ blog.title + "</h2>");
+                        $("#blogList").append("<li>"+ blog.text + "</li>");
+                        $("#blogList").append("<h5>"+ blog.author + "</h5>");
+
+
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Display Blogs</h1>
+    <button id="getBlogs">Get Blogs</button>
+    <ul id="blogList"></ul>
+
+    <label for="sort">Select Ascending or Descending Order:</label>
+    <select name="sort" id="sorting">
+        <option value="=asc" id="sort-order">Ascending</option>
+        <option value="=desc" id="sort-order">Descending</option>
+    </select>
+
+
+
+    <!-- <a href="http://localhost:4000/blogs/all?sort=asc">Sort Blogs in Ascending Order</a>
+    <a href="http://localhost:4000/blogs/all?sort=desc">Sort Blogs in Descending Order</a> -->
+</body>
+
+</html>
