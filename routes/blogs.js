@@ -1,38 +1,62 @@
 var express = require('express');
-const { route } = require('../app');
 var router = express.Router();
 
 var blogs = require('../public/sampleBlogs');
 const blogPosts = blogs.blogPosts;
 
-
+const {blogsDB} = require("../mongo");
 
 //http://localhost:4000/blogs
-router.get("/", function (req, res, next) {
-    res.json(blogPosts);
+router.get("/", async function (req, res, next) {
+    try {
+        const collection = await blogsDB().collection("blogs50")
+        const blogs50 = await collection.find({}).toArray();
+        res.json(blogs50);
+    }
+    catch (e) {
+        res.status(500).send("Error fetching posts.")
+    }
 })
 
 
 //http://localhost:4000/blogs/all
-router.get('/all', function (req, res, next) {
-    let sort = req.query.sort;
-    res.json(sortBlogs(sort));
+router.get('/all', async function (req, res, next) {
+    try {
+        let sortField = req.query.sortField;
+        let sort = req.query.sort;
+        if (sort === "asc"){
+            sort = 1;
+        }
+        if (sort === "desc"){
+            sort = -1;
+        }
 
+        const collection = await blogsDB().collection("blogs50")
+        const blogs50 = await collection.find({}).sort({[sortField] : sort}).toArray();
+
+    res.json(blogs50);
+    } 
+    catch (e) {
+        res.status(500).send("Error fetching posts.")
+    }
 });
 
-let sortBlogs = (order) => {
-    if (order === 'asc') {
-        return blogPosts.sort(function (a, b) {
-            return new Date(a.createdAt) - new Date(b.createdAt)
-        })
-    } else if (order === 'desc') {
-        return blogPosts.sort(function (a, b) {
-            return new Date(b.createdAt) - new Date(a.createdAt)
-        });
-    } else {
-        return blogPosts;
-    }
-};
+
+
+
+// let sortBlogs = (order) => {
+//     if (order === 'asc') {
+//         return blogPosts.sort(function (a, b) {
+//             return new Date(a.createdAt) - new Date(b.createdAt)
+//         })
+//     } else if (order === 'desc') {
+//         return blogPosts.sort(function (a, b) {
+//             return new Date(b.createdAt) - new Date(a.createdAt)
+//         });
+//     } else {
+//         return blogPosts;
+//     }
+// };
 
 
 
@@ -57,7 +81,6 @@ router.get('/getblogbyid', (req, res) => {
     res.json(foundBlog);
 
 })
-
 
 
 //http://localhost:4000/blogs/singleblog/4  using route params

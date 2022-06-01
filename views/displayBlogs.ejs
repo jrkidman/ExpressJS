@@ -7,20 +7,29 @@
         $(document).ready(function () {
             var blogs = [];
             var sortOrder;
+            var sortField;
 
             $("#getBlogs").click(function () {
-                sortOrder = $("#sorting").val();
-                if (sortOrder) {
-                    sortOrder = "?sort" + sortOrder;
-                    console.log(sortOrder);
+                $("#blogList").empty(); 
+                sortField = $("#sort-field option:selected").val();
+                sortOrder = $("#sorting option:selected").val();
+                if (sortField){
+                    sortField = "?sortField=" + sortField
                 }
-                $.get("http://localhost:4000/blogs/all" + sortOrder, function (blogs) {
+                if (sortOrder) {
+                    sortOrder = "&sort=" + sortOrder;
+                    console.log(sortField, sortOrder);
+                }
+                $.get("http://localhost:4000/blogs/all" + sortField + sortOrder, function (blogs) {
                     blogs.forEach((blog) => {
                         console.log(blog);
                         $("#blogList").append("<h2>"+ blog.title + "</h2>");
+                        $("#blogList").append("<h4>"+ blog.id + "</h4>");
+                        $("#blogList").append("<p>"+ blog.createdAt + "</p>");
+                        $("#blogList").append("<p>"+ blog.lastModified + "</p>");
                         $("#blogList").append("<li>"+ blog.text + "</li>");
+                        $("#blogList").append("<p>"+ blog.category + "</p>");
                         $("#blogList").append("<h5>"+ blog.author + "</h5>");
-
 
                     });
                 });
@@ -32,14 +41,24 @@
 <body>
     <h1>Display Blogs</h1>
     <button id="getBlogs">Get Blogs</button>
-    <ul id="blogList"></ul>
+
+    <label for="sort">Sort Blogs By:</label>
+    <select name="sort-field" id="sort-field">
+        <option value="id">ID</option>
+        <option value="author">Author</option>
+        <option value="createdAt">Created At</option>
+        <option value="lastModified">Last Modified</option>
+        <option value="title">Title</option>
+        <option value="category">Category</option>
+    </select>
 
     <label for="sort">Select Ascending or Descending Order:</label>
     <select name="sort" id="sorting">
-        <option value="=asc" id="sort-order">Ascending</option>
-        <option value="=desc" id="sort-order">Descending</option>
+        <option value="asc" id="sort-order">Ascending</option>
+        <option value="desc" id="sort-order">Descending</option>
     </select>
 
+    <ul id="blogList"></ul>
 
 
     <!-- <a href="http://localhost:4000/blogs/all?sort=asc">Sort Blogs in Ascending Order</a>
