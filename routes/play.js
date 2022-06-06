@@ -25,6 +25,12 @@ const foods = [
     { foodId: 99, food: 'Chocolate Chocolate' },
 ]
 
+const faveFood = foods.find(food => food.foodId === 7)
+const faveFoodName = faveFood.food;
+
+
+
+
 //route parameters: name and color, then a favorite food from the array
 router.get("/hello/:name/:color/:foodId", function (req, res, next) {
     let foodId = (req.params.foodId);
@@ -32,6 +38,8 @@ router.get("/hello/:name/:color/:foodId", function (req, res, next) {
     const foodName = ''; //todo
     res.send(`Hello ${req.params.name}. Your favorite color is ${req.params.color}. Your favrotie food is ${foodId}`);
 })
+
+
 
 
 

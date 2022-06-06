@@ -13,6 +13,7 @@
                 $("#blogList").empty(); 
                 sortField = $("#sort-field option:selected").val();
                 sortOrder = $("#sorting option:selected").val();
+                
                 if (sortField){
                     sortField = "?sortField=" + sortField
                 }
@@ -29,7 +30,7 @@
                         $("#blogList").append("<p>"+ blog.lastModified + "</p>");
                         $("#blogList").append("<li>"+ blog.text + "</li>");
                         $("#blogList").append("<p>"+ blog.category + "</p>");
-                        $("#blogList").append("<h5>"+ blog.author + "</h5>");
+                        $("#blogList").append("<p>"+ blog.author + "</p>");
 
                     });
                 });
@@ -40,6 +41,12 @@
 
 <body>
     <h1>Display Blogs</h1>
+    <h2>
+        <a href="http://localhost:4000/blogs/displayBlogs">Display Blog</a>
+        <a href="http://localhost:4000/blogs/displaySingleBlog">Display Single Blog</a>
+        <a href="http://localhost:4000/blogs/postBlog">Post Blog</a>
+    </h2>
+
     <button id="getBlogs">Get Blogs</button>
 
     <label for="sort">Sort Blogs By:</label>
