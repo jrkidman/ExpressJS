@@ -80,6 +80,7 @@ router.post('/submit', async function (req, res) {
         const collection = await blogsDB().collection("blogs50");
         const sortedBlogArray = await collection.find({}).sort({ id: 1 }).toArray();
         const lastBlog = sortedBlogArray[sortedBlogArray.length - 1]
+
         const newPost = {
             title: req.body.title,
             text: req.body.text,
@@ -156,9 +157,15 @@ router.delete('/deleteBlog/:blogId', async (req, res) => {
     try {
         const blogId = Number(req.params.blogId);
         const collection = await blogsDB().collection("blogs50");
-        // const blogToDelete = await collection.findOne({id: blogId});
-        await collection.deleteOne({ id: blogId });
-        res.status(200).send("Succesfully deleted.")
+        const blogToDelete = await collection.deleteOne({ id: blogId })
+
+        if (blogToDelete.deletedCount === 1){
+            res.send("Succesfully deleted.").status(200)
+        }
+        else{
+            res.send("This blog does not exist.").status(404)
+        }
+
 
     } catch (error) {
         res.status(500).send("Error deleting blog." + error)
